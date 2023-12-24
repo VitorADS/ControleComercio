@@ -1,0 +1,15 @@
+{% extends 'admin/baseadmin.html.twig' %}
+
+{% block content %}
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+    <h4 class="mb-3">Cadastro de usuario: </h4>
+
+    {{form(registerForm)}}
+{% endblock %}
