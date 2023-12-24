@@ -8,11 +8,13 @@
         <div class="collapse navbar-collapse" id="navbarText">
             <ul class="navbar-nav me-auto mb-4 mb-lg-0">
                 <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="{{path('app_home')}}">Home</a>
+                <a class="nav-link {% if 'home' in app.request.get('_route') %} active{% endif %}"
+                    aria-current="page" href="{{path('app_home')}}">Home</a>
                 </li>
                 {% if 'ROLE_ADMIN' in user.roles %}                
                     <li class="nav-item">
-                    <a class="nav-link" href="{{path('app_admin_users')}}">Painel administrativo</a>
+                    <a class="nav-link {% if 'admin' in app.request.get('_route') %} active{% endif %}"
+                        href="{{path('app_admin_users')}}">Painel administrativo</a>
                     </li>
                 {% endif %}
             </ul>

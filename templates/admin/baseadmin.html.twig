@@ -7,10 +7,14 @@
     <div class="row align-items-start" style="height: 600px;">
         <div class="col-2 bg-black pt-3 me-2 rounded" style="height: 100%;">
             <nav class="nav nav-pills flex-column">
-                <a class="nav-link text-white" aria-current="page" href="{{path('app_admin_users')}}">Listar usuarios</a>
-                <a class="nav-link text-white" href="{{path('app_admin_users_register')}}">Cadastrar usuario</a>
-                <a class="nav-link text-white" href="#">Listar produtos</a>
-                <a class="nav-link text-white" href="#">Cadastrar produto</a>
+                <a class="nav-link text-white {% if 'app_admin_users' == app.request.get('_route') %} active{% endif %}"
+                    href="{{path('app_admin_users')}}">Listar usuarios</a>
+                <a class="nav-link text-white {% if 'app_admin_users_register' == app.request.get('_route') %} active{% endif %}"
+                    href="{{path('app_admin_users_register')}}">Cadastrar usuario</a>
+                <a class="nav-link text-white {% if 'app_admin_products' == app.request.get('_route') %} active{% endif %}"
+                    href="{{path('app_admin_products')}}">Listar produtos</a>
+                <a class="nav-link text-white {% if 'app_admin_products_register' == app.request.get('_route') %} active{% endif %}"
+                    href="{{path('app_admin_products_register')}}">Cadastrar produto</a>
             </nav>
         </div>
         <div class="col bg-dark text-white p-3" style="height: 100%;">

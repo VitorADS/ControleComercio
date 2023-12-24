@@ -27,7 +27,7 @@ class Product extends AbstractEntity
     private float $value;
 
     #[ORM\Column]
-    private int $quantity ;
+    private int $quantity;
 
     public function getId(): ?int
     {

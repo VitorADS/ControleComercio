@@ -19,7 +19,7 @@ class AdminController extends AbstractController
     {   
     }
 
-    #[Route('/admin/users', name: 'app_admin_users')]
+    #[Route('/admin/users', name: 'app_admin_users', methods:['GET'])]
     public function index(): Response
     {
         $user = $this->getUser();

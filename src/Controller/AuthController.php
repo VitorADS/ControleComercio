@@ -21,7 +21,7 @@ class AuthController extends AbstractController
     {
     }
 
-    #[Route('/', name: 'app_auth_login')]
+    #[Route('/', name: 'app_auth_login', methods:['GET', 'POST'])]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         if($this->getUser()){
