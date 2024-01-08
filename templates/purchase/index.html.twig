@@ -1,0 +1,47 @@
+{% extends 'purchase/basepurchase.html.twig' %}
+
+{% block content %}
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+    <h4>Listagem de vendas:</h4>
+
+    <table class="table table-dark table-striped border border-black mt-4 text-center">
+        <thead>
+            <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Total</th>
+            <th scope="col">Cliente</th>
+            <th scope="col">Usuario</th>
+            <th scope="col">Status</th>
+            <th scope="col">Acoes</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for purchase in purchases %}
+                <tr>
+                    <td> #{{purchase.id}} </td>
+                    <td> {{purchase.getShowTotal}} </td>
+                    <td> {{purchase.buyerName}} </td>
+                    <td> {{purchase.userSystem}} </td>
+                    <td> {{purchase.getLastStatus}} </td>
+                    <td>
+                        <div class="d-flex justify-content-center">
+                            <a title="Editar venda" class="btn btn-primary btn-sm me-2" href="{{path('app_purchase_edit', {purchase: purchase.id})}}">E</a>
+                            <form action="{{path('app_purchase_remove', {purchase: purchase.id})}}" method="POST">
+                                <button title="Remover venda" class="btn btn-danger btn-sm">
+                                    X
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends 'purchase/basepurchase.html.twig' %}
+
+{% block content %}
+    <h4 class="mb-4">Pedido de: {{purchase.buyerName}}</h4>
+
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ label }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+
+    <ul class="nav nav-underline bg-dark mt-4">
+        <li class="nav-item">
+            <a class="nav-link text-light active" aria-current="page" href="#itens">Itens</a>
+        </li>
+    </ul>
+
+    <div id="itens">
+        {% include "purchase/addpurchaseitemsmodal.html.twig" with {
+            'modalName': 'purchaseItem',
+            'btnName': 'purchaseItemBtn',
+            'closeName': 'purchaseItemClose'
+        } %}
+        <div class="mt-4">
+            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#purchaseItem">Adicionar item</button>
+            <button class="btn btn-primary btn-sm">Adicionar pagamento</button>
+            <a class="btn btn-success btn-sm" href="{{path('app_purchase_finish', {purchase: purchase.id})}}">Finalizar venda</a>
+        </div>
+
+        <table id="itens" class="table table-dark table-striped border border-black mt-4 text-center">
+            <thead>
+                <tr>
+                <th scope="col">Item</th>
+                <th scope="col">Total</th>
+                <th scope="col">Usuario</th>
+                <th scope="col">Acoes</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for purchaseItem in purchaseItems %}
+                    <tr>
+                        <td> {{purchaseItem.product}} </td>
+                        <td> R$ {{purchaseItem.getShowSubTotal}} </td>
+                        <td> {{purchaseItem.userSystem}} </td>
+                        <td>
+                            <form action="{{ path('app_purchase_remove_item', {item: purchaseItem.id}) }}" method="POST">
+                                <button title="Remover item" class="btn btn-danger btn-sm">
+                                    X
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                <tr>
+                    <td class="text-start"><strong> Total: {{ purchase.getShowTotal }} <br> A pagar: R$ {{ toPay }}</strong></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

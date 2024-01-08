@@ -2,16 +2,15 @@
 
 namespace App\Service;
 
-use App\Entity\AbstractEntity;
-use App\Entity\Product;
+use App\Entity\PaymentType;
 use Doctrine\ORM\EntityManagerInterface;
 
-class ProductService extends AbstractService
+class PaymentTypeService extends AbstractService
 {
     public function __construct(
         EntityManagerInterface $entityManager
     )
     {
-        parent::__construct($entityManager, Product::class);
+        parent::__construct($entityManager, PaymentType::class);
     }
 }

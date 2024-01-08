@@ -1,0 +1,21 @@
+{% extends 'logged.html.twig' %}
+
+{% block title %}Vendas{% endblock %}
+
+{% block body %}
+<div class="bg-dark text-white p-3 border border-black rounded-bottom">
+    <div class="row align-items-start" style="height: 600px;">
+        <div class="col-2 bg-black pt-3 me-2 rounded" style="height: 100%;">
+            <nav class="nav nav-pills flex-column">
+                <a class="nav-link text-white {% if 'app_purchase_index' == app.request.get('_route') %} active{% endif %}"
+                    href="{{path('app_purchase_index')}}">Listar vendas</a>
+                <a class="nav-link text-white {% if 'app_purchase_create' == app.request.get('_route') %} active{% endif %}"
+                    href="{{path('app_purchase_create')}}">Criar venda</a>
+            </nav>
+        </div>
+        <div class="col bg-dark text-white p-3" style="height: 100%;">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock %}

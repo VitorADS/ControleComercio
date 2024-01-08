@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\ProductRepository;
 use App\Traits\Timestamps;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
@@ -28,6 +30,14 @@ class Product extends AbstractEntity
 
     #[ORM\Column]
     private int $quantity;
+
+    #[ORM\OneToMany(mappedBy: 'product', targetEntity: PurchaseItem::class, orphanRemoval: true)]
+    private Collection $purchaseItems;
+
+    public function __construct()
+    {
+        $this->purchaseItems = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -56,6 +66,11 @@ class Product extends AbstractEntity
         return $this;
     }
 
+    public function getShowValue(): string
+    {
+        return number_format($this->getValue(), 2, ',');
+    }
+
     public function getValue(): float
     {
         return $this->value;
@@ -76,5 +91,28 @@ class Product extends AbstractEntity
     {
         $this->quantity = $quantity;
         return $this;
+    }
+
+    /**
+     * @return Collection<int, PurchaseItem>
+     */
+    public function getPurchaseItems(): Collection
+    {
+        return $this->purchaseItems;
+    }
+
+    public function addPurchaseItem(PurchaseItem $purchaseItem): static
+    {
+        if (!$this->purchaseItems->contains($purchaseItem)) {
+            $this->purchaseItems->add($purchaseItem);
+            $purchaseItem->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->getName() . ' (R$ ' . $this->getShowValue() . ')';
     }
 }

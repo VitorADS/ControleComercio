@@ -34,6 +34,11 @@ abstract class AbstractService
         return $this->getRepository()->findBy($criteria, $orderBy, $limit, $offset);
     }
 
+    public function getEntityManager(): EntityManagerInterface
+    {
+        return $this->entityManager;
+    }
+
     public function save(AbstractEntity $entity, ?int $id = null): AbstractEntity
     {
         $this->entityManager->beginTransaction();

@@ -5,5 +5,28 @@
 {% block body %}
 <div class="bg-dark text-white p-3 border border-black rounded-bottom">
     <h3>Ultimas vendas: </h3>
+
+    <table class="table table-dark table-striped border border-black mt-4 text-center">
+        <thead>
+            <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Nome do cliente</th>
+            <th scope="col">Total</th>
+            <th scope="col">Data</th>
+            <th scope="col">Usuario</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for purchase in purchases %}
+                <tr>
+                    <td> #{{purchase.id}} </td>
+                    <td> {{purchase.buyerName}} </td>
+                    <td> {{purchase.getShowTotal}} </td>
+                    <td> {{purchase.createdAt|date('d/m/Y')}} </td>
+                    <td> {{purchase.userSystem}} </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 {% endblock %}

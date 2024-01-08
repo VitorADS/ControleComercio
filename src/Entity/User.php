@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use App\Traits\Timestamps;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -31,6 +33,18 @@ class User extends AbstractEntity implements UserInterface, PasswordAuthenticate
 
     #[ORM\Column(nullable: false)]
     private string $password;
+
+    #[ORM\OneToMany(mappedBy: 'userSystem', targetEntity: Purchase::class, orphanRemoval: true)]
+    private Collection $purchases;
+
+    #[ORM\OneToMany(mappedBy: 'userSystem', targetEntity: PurchaseItem::class, orphanRemoval: true)]
+    private Collection $purchaseItems;
+
+    public function __construct()
+    {
+        $this->purchases = new ArrayCollection();
+        $this->purchaseItems = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -108,5 +122,46 @@ class User extends AbstractEntity implements UserInterface, PasswordAuthenticate
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    /**
+     * @return Collection<int, Purchase>
+     */
+    public function getPurchases(): Collection
+    {
+        return $this->purchases;
+    }
+
+    public function addPurchase(Purchase $purchase): static
+    {
+        if (!$this->purchases->contains($purchase)) {
+            $this->purchases->add($purchase);
+            $purchase->setUserSystem($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PurchaseItem>
+     */
+    public function getPurchaseItems(): Collection
+    {
+        return $this->purchaseItems;
+    }
+
+    public function addPurchaseItem(PurchaseItem $purchaseItem): static
+    {
+        if (!$this->purchaseItems->contains($purchaseItem)) {
+            $this->purchaseItems->add($purchaseItem);
+            $purchaseItem->setUserSystem($this);
+        }
+
+        return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->getName();
     }
 }

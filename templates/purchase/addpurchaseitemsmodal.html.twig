@@ -1,0 +1,20 @@
+<div class="modal fade modal-lg" id="purchaseItem" tabindex="-1" aria-labelledby="purchaseItem" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content bg-dark text-light">
+      <div class="modal-header">
+        <h5 class="modal-title" id="purchaseItem">Adicionar item</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </div>
+      <div class="modal-body">
+		{{form_start(purchaseItemForm)}}
+			{{form_row(purchaseItemForm.quantity)}}
+			{{form_row(purchaseItemForm.product)}}
+			{{form_row((purchaseItemForm.submit))}}
+		{{form_end(purchaseItemForm)}}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+      </div>
+    </div>
+  </div>
+</div>
