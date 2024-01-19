@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\PaymentRepository;
 use App\Traits\Timestamps;
+use App\Utils\FormatNumber;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PaymentRepository::class)]
@@ -46,6 +47,11 @@ class Payment extends AbstractEntity
         $this->paymentType = $paymentType;
 
         return $this;
+    }
+
+    public function getShowTotal(): string
+    {
+        return FormatNumber::format($this->getTotal());
     }
 
     public function getTotal(): float

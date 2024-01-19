@@ -3,7 +3,6 @@
 namespace App\DTO;
 
 use App\Entity\Product;
-use App\Entity\Purchase;
 use App\Entity\User;
 
 class PurchaseItemDTO

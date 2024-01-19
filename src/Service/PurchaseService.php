@@ -5,7 +5,9 @@ namespace App\Service;
 use App\Entity\AbstractEntity;
 use App\Entity\Purchase;
 use App\Entity\Status;
+use App\Utils\FormatNumber;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Exception;
 
 class PurchaseService extends AbstractService
@@ -31,13 +33,22 @@ class PurchaseService extends AbstractService
                 $entity->addStatus($status);
             }
     
-            if($entity->getLastStatus()->isFinished() && $entity->hasPurchaseItems()){
-                throw new Exception('Nao possui nenhum item, impossivel finalizar!');
-            }
+            $this->isValid($entity);
     
             return parent::save($entity, $id);
         }catch(Exception $e){
             throw $e;
+        }
+    }
+
+    private function isValid(Purchase $entity): void
+    {
+        if($entity->getLastStatus()->isFinished() && !$entity->hasPurchaseItems()){
+            throw new Exception('Nao possui nenhum item, impossivel finalizar!');
+        }
+
+        if($entity->getLastStatus()->isFinished() && $entity->getRemainingValue() > 0){
+            throw new Exception('Nao e possivel finalizar, necessario pagar R$ ' . FormatNumber::format($entity->getRemainingValue()));
         }
     }
 
@@ -49,6 +60,10 @@ class PurchaseService extends AbstractService
     public function remove(AbstractEntity $entity): bool
     {
         try{
+            if($entity->getLastStatus() instanceof Status && $entity->getLastStatus()->isFinished()){
+                throw new Exception('Venda finalizada!');
+            }
+
             if($entity->hasPayment()){
                 throw new Exception('Venda possui pagamentos!');
             }
@@ -67,6 +82,10 @@ class PurchaseService extends AbstractService
         if($purchase->hasStatus($status)){
             throw new Exception('Venda ja finalizada!');
         } 
+
+        if($purchase->getTotal() < $purchase->getRemainingValue()){
+            throw new Exception('Venda com pagamento pendente!');
+        }
 
         if(!$purchase->hasPurchaseItems()){
             throw new Exception('Nenhum item na venda!');

@@ -62,7 +62,7 @@ class Purchase extends AbstractEntity
         return $this->total;
     }
 
-    public function getRemainingValue(): float
+    public function getRemainingValue(): ?float
     {
         $total = $this->getTotal();
 

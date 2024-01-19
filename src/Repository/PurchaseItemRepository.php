@@ -14,7 +14,7 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method PurchaseItem[]    findAll()
  * @method PurchaseItem[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class PurchaseItemRepository extends ServiceEntityRepository
+class PurchaseItemRepository extends AbstractRepository
 {
     public function __construct(ManagerRegistry $registry)
     {

@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Entity\AbstractEntity;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Exception;
 
 abstract class AbstractService
@@ -17,6 +18,11 @@ abstract class AbstractService
     )
     {
         $this->repository = $this->entityManager->getRepository($entityClass);
+    }
+
+    public function findItens(array $criteria = [], int $limit = 10, int $page = 1): Paginator
+    {
+        return $this->getRepository()->findItens($criteria, $limit, $page);
     }
 
     public function getRepository(): EntityRepository

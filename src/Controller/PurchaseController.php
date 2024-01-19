@@ -2,13 +2,19 @@
 
 namespace App\Controller;
 
+use App\DTO\PaymentDTO;
 use App\DTO\PurchaseItemDTO;
+use App\Entity\Payment;
 use App\Entity\Purchase;
 use App\Entity\PurchaseItem;
 use App\Form\PurchaseFormType;
 use App\Form\PurchaseItemType;
+use App\Service\PaymentService;
 use App\Service\PurchaseItemService;
 use App\Service\PurchaseService;
+use App\Traits\Form;
+use App\Traits\Pagination;
+use App\Utils\FormatNumber;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,20 +23,23 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class PurchaseController extends AbstractController
 {
+    use Form, Pagination;
+
     public function __construct(
         private PurchaseService $purchaseService,
-        private PurchaseItemService $purchaseItemService
+        private PurchaseItemService $purchaseItemService,
+        private PaymentService $paymentService
     )
     {
     }
 
     #[Route('/purchase/index', name: 'app_purchase_index', methods:['GET'])]
-    public function purchase(): Response
+    public function purchase(Request $request): Response
     {
-        $user = $this->getUser();
-        $purchases = $this->purchaseService->getRepository()->findAll();
+        $array = $this->getItens($request, $this->purchaseService);
+        $array['user'] = $this->getUser();
 
-        return $this->render('purchase/index.html.twig', compact('user', 'purchases'));
+        return $this->render('purchase/index.html.twig', $array);
     }
 
     #[Route('/purchase/create', name: 'app_purchase_create', methods:['GET', 'POST'])]
@@ -55,30 +64,59 @@ class PurchaseController extends AbstractController
         return $this->render('purchase/create.html.twig', compact('user', 'purchaseForm'));
     }
 
-    #[Route('/purchase/edit/{purchase}', name: 'app_purchase_edit', methods:['GET', 'POST'])]
-    public function purchaseEdit(Request $request, Purchase $purchase): Response
+    #[Route('/purchase/edit/{purchase}', name: 'app_purchase_edit', methods:['GET'])]
+    public function purchaseEdit(Request $request, Purchase $purchase, array $array = []): Response
     {
-        $user = $this->getUser();
+        $array['purchase'] = $purchase;
+        $array['user'] = $this->getUser();
         $purchaseItemDTO = new PurchaseItemDTO();
-        $purchaseItemDTO->purchase = $purchase->getId();
-        $purchaseItemForm = $this->createForm(
-            PurchaseItemType::class,
-            $purchaseItemDTO,
-            [
-                'action' => $this->generateUrl('app_purchase_add_item'),
-                'method' => 'POST'
-            ]
-        );
+        $paymentDTO = new PaymentDTO();
+        $paymentDTO->total = $purchase->getRemainingValue();
+        $paymentDTO->purchase = $purchase;
 
-        $toPay = number_format($purchase->getRemainingValue(), 2, ',');
-        $purchaseItems = $this->purchaseItemService->findBy(['purchase' => $purchase->getId()]);
-        return $this->render('purchase/edit.html.twig', compact(
-            'user',
-            'purchase',
-            'purchaseItemForm',
-            'purchaseItems',
-            'toPay'
-        ));
+        $array = array_merge($array, $this->getItens($request, $this->purchaseItemService, ['purchase' => $purchase->getId()]));
+        $array['purchaseItemForm'] = $this->createPurchaseForm($purchaseItemDTO, $purchase);
+        $array['paymentForm'] = $this->createPaymentForm($paymentDTO);
+
+        $array['toPay'] = FormatNumber::format($purchase->getRemainingValue());
+        $array['payments'] = $purchase->getPayments();
+
+        return $this->render('purchase/edit.html.twig', $array);
+    }
+
+    #[Route('/purchase/add-payment/{purchase}', name: 'app_purchase_add_payment', methods:['POST'])]
+    public function purchaseAddPayment(Request $request, Purchase $purchase): Response
+    {
+        try{
+            $paymentDTO = new PaymentDTO();
+            $paymentDTO->userSystem = $this->getUser();
+            $paymentDTO->purchase = $purchase;
+            $paymentForm = $this->createPaymentForm($paymentDTO)
+                ->handleRequest($request);
+
+            if($paymentForm->isSubmitted() && $paymentForm->isValid()){
+                $this->paymentService->addPayment($paymentDTO);
+            }
+
+            $this->addFlash('success', 'Pagamento adicionado!');
+        }catch(Exception $e){
+            $this->addFlash('danger', $e->getMessage());
+        }
+
+        return $this->redirectToRoute('app_purchase_edit', ['purchase' => $purchase->getId()]);
+    }
+
+    #[Route('/purchase/remove-payment/{payment}', name: 'app_purchase_remove_payment', methods:['POST'])]
+    public function purchaseRemovePayment(Request $request, Payment $payment): Response
+    {
+        try{
+            $this->paymentService->remove($payment);
+            $this->addFlash('success', 'Pagamento removido!');
+        }catch(Exception $e){
+            $this->addFlash('danger', $e->getMessage());
+        }
+
+        return $this->redirectToRoute('app_purchase_edit', ['purchase' => $payment->getPurchase()->getId()]);
     }
 
     #[Route('/purchase/remove/{purchase}', name: 'app_purchase_remove', methods:['POST'])]
@@ -91,7 +129,7 @@ class PurchaseController extends AbstractController
             return $this->redirectToRoute('app_purchase_index');
         }catch(Exception $e){
             $this->addFlash('danger', $e->getMessage());
-            return $this->redirectToRoute('app_purchase_edit', ['purchase' => $purchase->getId()]);
+            return $this->redirectToRoute('app_purchase_index');
         }
     }
 

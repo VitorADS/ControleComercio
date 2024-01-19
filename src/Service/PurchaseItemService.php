@@ -25,6 +25,11 @@ class PurchaseItemService extends AbstractService
 
         /** @var Purchase $purchase */
         $purchase = (new PurchaseService($this->getEntityManager()))->findOneBy(['id' => $dto->purchase]);
+
+        if($purchase->getLastStatus()->isFinished()){
+            throw new Exception('Compra finalizada!');
+        }
+
         $purchaseItem = new PurchaseItem();
         $purchaseItem->setPurchase($purchase);
         $purchaseItem->setQuantity($dto->quantity);
@@ -38,6 +43,14 @@ class PurchaseItemService extends AbstractService
 
     public function removeItem(PurchaseItem $purchaseItem): void
     {
+        if($purchaseItem->getPurchase()->getLastStatus()->isFinished()){
+            throw new Exception('Compra finalizada!');
+        }
+
+        if($purchaseItem->getPurchase()->hasPayment()){
+            throw new Exception('Compra possui pagamentos!');
+        }
+
         $purchase = $purchaseItem->getPurchase();
         $purchase->setTotal($purchase->getTotal() - $purchaseItem->getSubTotal());
         $this->remove($purchaseItem);

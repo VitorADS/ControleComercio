@@ -14,7 +14,7 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Payment[]    findAll()
  * @method Payment[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class PaymentRepository extends ServiceEntityRepository
+class PaymentRepository extends AbstractRepository
 {
     public function __construct(ManagerRegistry $registry)
     {

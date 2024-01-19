@@ -1,0 +1,16 @@
+<nav class="text-white" aria-label="Pagina">
+    <ul class="pagination pagination-sm ">
+        <li class="page-item {{ (page == 1) ? 'disabled' : '' }}"><a class="page-link " href="{{ path(route, {page: page - 1}) }}">Anterior</a></li>
+        <li class="page-item {{ (page == 1) ? 'active' : '' }}"><a class="page-link" href="{{ path(route, {page: (page == 2 or page == 1) ? 1 : page - 1}) }}">{{ (page < 2) ? 1 : page - 1 }}</a></li>
+
+        {% if pages > 1 %}        
+            <li class="page-item {{ (page > 1) ? 'active' : '' }}"><a class="page-link" href="{{ path(route, {page: (page < 2) ? 2 : page}) }}">{{ (page < 2) ? 2 : page }}</a></li>
+        {% endif %}
+
+        {% if (page == 1 and pages > 2) or (page != 1 and pages >= page + 1) %}
+            <li class="page-item"><a class="page-link" href="{{ path(route, {page: (page == 1 or page == 2) ? 3 : page + 1}) }}">{{ (page == 1) ? 3 : page + 1 }}</a></li>
+        {% endif %}
+
+        <li class="page-item"><a class="page-link {{ (page + 1 > pages) ? 'disabled' : '' }}" href="{{ path(route, {page: page + 1}) }}">Proxima</a></li>
+    </ul>
+</nav>

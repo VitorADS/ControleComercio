@@ -1,0 +1,38 @@
+{% include "purchase/addpaymentmodal.html.twig" %}
+
+<div class="mt-4">
+    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#payment">Adicionar pagamento</button>
+</div>
+
+<table class="table table-dark table-striped border border-black mt-4 text-center">
+    <thead>
+        <tr>
+            <th scope="col">Tipo do pagamento</th>
+            <th scope="col">Valor</th>
+            <th scope="col">Descricao</th>
+            <th scope="col">Acoes</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for payment in payments %}
+            <tr>
+                <td> {{payment.paymentType}} </td>
+                <td> R$ {{payment.getShowTotal}} </td>
+                <td> {{payment.description}} </td>
+                <td>
+                    <form action="{{ path('app_purchase_remove_payment', {payment: payment.id}) }}" method="POST">
+                        <button title="Remover item" class="btn btn-danger btn-sm">
+                            X
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        <tr>
+            <td class="text-start"><strong> Total: {{ purchase.getShowTotal }} <br> A pagar: <span class="text-danger"> R$ {{ toPay }} </span></strong></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>

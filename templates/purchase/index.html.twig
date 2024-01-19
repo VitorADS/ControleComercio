@@ -23,17 +23,17 @@
             </tr>
         </thead>
         <tbody>
-            {% for purchase in purchases %}
+            {% for item in items %}
                 <tr>
-                    <td> #{{purchase.id}} </td>
-                    <td> {{purchase.getShowTotal}} </td>
-                    <td> {{purchase.buyerName}} </td>
-                    <td> {{purchase.userSystem}} </td>
-                    <td> {{purchase.getLastStatus}} </td>
+                    <td> #{{item.id}} </td>
+                    <td> {{item.getShowTotal}} </td>
+                    <td> {{item.buyerName}} </td>
+                    <td> {{item.userSystem}} </td>
+                    <td> {{item.getLastStatus}} </td>
                     <td>
                         <div class="d-flex justify-content-center">
-                            <a title="Editar venda" class="btn btn-primary btn-sm me-2" href="{{path('app_purchase_edit', {purchase: purchase.id})}}">E</a>
-                            <form action="{{path('app_purchase_remove', {purchase: purchase.id})}}" method="POST">
+                            <a title="Editar venda" class="btn btn-primary btn-sm me-2" href="{{path('app_purchase_edit', {purchase: item.id})}}">E</a>
+                            <form action="{{path('app_purchase_remove', {purchase: item.id})}}" method="POST">
                                 <button title="Remover venda" class="btn btn-danger btn-sm">
                                     X
                                 </button>
@@ -44,4 +44,5 @@
             {% endfor %}
         </tbody>
     </table>
+    {% include "pagination/pages.html.twig" with {'route' : 'app_purchase_index'} %}
 {% endblock %}

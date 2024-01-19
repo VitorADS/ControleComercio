@@ -6,27 +6,38 @@
 <div class="bg-dark text-white p-3 border border-black rounded-bottom">
     <h3>Ultimas vendas: </h3>
 
-    <table class="table table-dark table-striped border border-black mt-4 text-center">
-        <thead>
-            <tr>
-            <th scope="col">ID</th>
-            <th scope="col">Nome do cliente</th>
-            <th scope="col">Total</th>
-            <th scope="col">Data</th>
-            <th scope="col">Usuario</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for purchase in purchases %}
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+    {% if showTable %}
+        <table class="table table-dark table-striped border border-black text-center mt-4">
+            <thead>
                 <tr>
-                    <td> #{{purchase.id}} </td>
-                    <td> {{purchase.buyerName}} </td>
-                    <td> {{purchase.getShowTotal}} </td>
-                    <td> {{purchase.createdAt|date('d/m/Y')}} </td>
-                    <td> {{purchase.userSystem}} </td>
+                <th scope="col">ID</th>
+                <th scope="col">Nome do cliente</th>
+                <th scope="col">Total</th>
+                <th scope="col">Data</th>
+                <th scope="col">Usuario</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                    <tr>
+                        <td> #{{item.id}} </td>
+                        <td> {{item.buyerName}} </td>
+                        <td> {{item.getShowTotal}} </td>
+                        <td> {{item.createdAt|date('d/m/Y')}} </td>
+                        <td> {{item.userSystem}} </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% include "pagination/pages.html.twig" with {'route' : 'app_home'} %}
+    {% endif %}
 </div>
 {% endblock %}

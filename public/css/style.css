@@ -1,3 +1,24 @@
 .active{
     background-color: rgba(var(--bs-dark-rgb), var(--bs-bg-opacity)) !important;
 }
+
+.pagination > li > a
+{
+    background-color: #212529;
+    border-color: black;
+    color: white;
+}
+
+.pagination > .active > a
+{
+    color: white;
+    background-color: black !important;
+    border: solid 1px black !important;
+}
+
+.pagination > li > a:hover
+{
+    background-color: black !Important;
+    border: solid 1px black;
+    color: white;
+}
