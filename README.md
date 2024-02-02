@@ -4,3 +4,8 @@
 <p>/home utilizada para login</p>
 <p>todas as rotas /admin so podem ser acessadas por usuario com role ADMIN, demais rotas exigem apenas role USER</p>
 <p>existe uma rota /kitchen que e utilizada para visualizar pedidos e alterar seu status para pronto</p>
+
+<h3>Configuracao do projeot:</h3>
+<p>Necessario criar um arquivo .env.local para configurar o acesso ao banco de dados:</p>
+_<h5>DATABASE_URL="postgresql://usuario:senha@dominio:porta/nome-banco-dados?serverVersion=15&charset=utf8"</h5>_
+<p>Rodar o composer install --no-dev e o npm install para instalar as dependencias do projeto</p>
