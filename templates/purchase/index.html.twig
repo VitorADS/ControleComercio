@@ -1,13 +1,7 @@
 {% extends 'purchase/basepurchase.html.twig' %}
 
 {% block content %}
-    {% for label, messages in app.flashes %}
-        {% for message in messages %}
-            <div class="alert alert-{{ label }}">
-                {{ message }}
-            </div>
-        {% endfor %}
-    {% endfor %}
+    {% include "alerts/message.html.twig" %}
 
     <h4>Listagem de vendas:</h4>
 
@@ -26,7 +20,7 @@
             {% for item in items %}
                 <tr>
                     <td> #{{item.id}} </td>
-                    <td> {{item.getShowTotal}} </td>
+                    <td class=" {{ (item.isFullyPaid) ? 'text-success' : 'text-danger' }} "> {{item.getShowTotal}} </td>
                     <td> {{item.buyerName}} </td>
                     <td> {{item.userSystem}} </td>
                     <td> {{item.getLastStatus}} </td>

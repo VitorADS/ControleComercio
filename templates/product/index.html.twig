@@ -1,13 +1,7 @@
 {% extends 'admin/baseadmin.html.twig' %}
 
 {% block content %}
-    {% for label, messages in app.flashes %}
-        {% for message in messages %}
-            <div class="alert alert-{{ label }}">
-                {{ message }}
-            </div>
-        {% endfor %}
-    {% endfor %}
+    {% include "alerts/message.html.twig" %}
 
     <h4>Listagem de produtos:</h4>
 
@@ -31,6 +25,7 @@
                     <td> R$ {{product.getShowValue}} </td>
                     <td> {{product.quantity}} </td>
                     <td>
+                        {# <a title="Editar produto" class="btn btn-primary btn-sm me-2" href="{{path('app_product_edit', {purchase: item.id})}}">E</a> #}
                         <form action="{{path('app_admin_products_remove', {productToRemove: product.id})}}" method="POST">
                             <button class="btn btn-danger btn-sm">
                                 X

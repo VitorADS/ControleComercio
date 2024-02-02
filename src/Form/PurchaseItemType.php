@@ -9,6 +9,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -35,6 +36,10 @@ class PurchaseItemType extends AbstractType
                 'choice_label' => function (Product $product): string {
                     return $product;
                 }
+            ])
+            ->add('notes', TextareaType::class, [
+                'label' => 'Observações',
+                'required' => false
             ])
             ->add('purchase', HiddenType::class)
             ->add('submit', SubmitType::class, [

@@ -25,6 +25,9 @@ class PurchaseItem extends AbstractEntity
     #[ORM\JoinColumn(nullable: false)]
     private Purchase $purchase;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $notes = null;
+
     #[ORM\Column]
     private int $quantity;
 
@@ -59,6 +62,17 @@ class PurchaseItem extends AbstractEntity
     public function setPurchase(Purchase $purchase): self
     {
         $this->purchase = $purchase;
+        return $this;
+    }
+
+    public function getNotes(): ?string
+    {
+        return $this->notes;
+    }
+
+    public function setNotes(?string $notes = null): self
+    {
+        $this->notes = $notes;
         return $this;
     }
 

@@ -9,6 +9,7 @@ class PurchaseItemDTO
 {
     public function __construct(
         public ?Product $product = null,
+        public ?string $notes = null,
         public ?int $quantity = null,
         public ?int $purchase = null,
         public ?float $subTotal = null,

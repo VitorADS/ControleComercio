@@ -3,19 +3,8 @@
 {% block title %}Faca o login{% endblock %}
 
 {% block body %}
-    {% for label, messages in app.flashes %}
-        {% for message in messages %}
-            <div class="alert alert-{{ label }}">
-                {{ message }}
-            </div>
-        {% endfor %}
-    {% endfor %}
-
-    {% if error %}
-        <div class="alert alert-danger">
-            {{ error.messageKey|trans(error.messageData, 'security') }}
-        </div>
-    {% endif %}
+    {% include "alerts/message.html.twig" %}
+    {% include "alerts/translate.html.twig" %}
 
     <form action="{{ path('app_auth_login') }}" method="post">
         <div class="form-group mb-3">

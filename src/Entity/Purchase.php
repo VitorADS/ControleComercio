@@ -68,10 +68,15 @@ class Purchase extends AbstractEntity
 
         /** @var Payment $payment */
         foreach($this->getPayments() as $payment){
-            $total -= $payment->getTotal();
+            $total = (float) number_format($total, 2) - (float) number_format($payment->getTotal(), 2);
         }
         
         return $total;
+    }
+
+    public function isFullyPaid(): bool
+    {
+        return $this->getRemainingValue() == 0;
     }
 
     public function setTotal(?float $total = null): self
@@ -144,6 +149,20 @@ class Purchase extends AbstractEntity
         }
 
         return $this;
+    }
+
+    public function isFinished(): bool
+    {
+        if(!$this->getStatuses()->isEmpty()){
+            $criteria = new Criteria();
+            $expr = $criteria->expr();
+            $criteria->where($expr->eq('finished', true));
+
+            $status = $this->getStatuses()->matching($criteria)->first();
+            return $status instanceof Status;
+        }
+
+        return false;
     }
 
     public function getLastStatus(): ?Status

@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Pedidos{% endblock %}
+{% block body %}
+    {% include "alerts/message.html.twig" %}
+
+    <table class="table table-dark table-striped border border-black mt-4 text-center">
+        <thead>
+            <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Cliente</th>
+            <th scope="col">Usuario</th>
+            <th scope="col">Status</th>
+            <th scope="col">Acoes</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+                <tr>
+                    <td> #{{item.id}} </td>
+                    <td> {{item.buyerName}} </td>
+                    <td> {{item.userSystem}} </td>
+                    <td> {{item.getLastStatus}} </td>
+                    <td> <a href="{{path('app_kitchen_purchase', {purchase: item.id})}}" class="btn btn-primary btn-sm">Ver pedido</a> </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% include "pagination/pages.html.twig" with {'route' : 'app_kitchen_home'} %}
+{% endblock %}

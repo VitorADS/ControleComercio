@@ -23,10 +23,13 @@ class Status extends AbstractEntity
     private string $name;
 
     #[ORM\Column]
-    private bool $new;
+    private bool $new = false;
 
     #[ORM\Column]
-    private bool $finished;
+    private bool $finished = false;
+
+    #[ORM\Column(options: ['default' => false])]
+    private bool $ready = false;
 
     #[ORM\ManyToMany(targetEntity: Purchase::class, inversedBy: 'statuses')]
     private Collection $purchase;
@@ -57,7 +60,7 @@ class Status extends AbstractEntity
         return $this->new;
     }
 
-    public function setNew(bool $new): self
+    public function setNew(bool $new = false): self
     {
         $this->new = $new;
         return $this;
@@ -68,9 +71,20 @@ class Status extends AbstractEntity
         return $this->finished;
     }
 
-    public function setFinished(bool $finished): self
+    public function setFinished(bool $finished = false): self
     {
         $this->finished = $finished;
+        return $this;
+    }
+
+    public function isReady(): bool
+    {
+        return $this->ready;
+    }
+
+    public function setReady(bool $ready = false): self
+    {
+        $this->ready = $ready;
         return $this;
     }
 

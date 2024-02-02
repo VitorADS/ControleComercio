@@ -22,7 +22,7 @@ class PaymentService extends AbstractService
     {
         $purchase = $paymentDTO->purchase;
 
-        if($purchase->getLastStatus()->isFinished()){
+        if($purchase->isFinished()){
             throw new Exception('Venda finalizada!');
         }
 
@@ -49,7 +49,7 @@ class PaymentService extends AbstractService
      */
     public function remove(AbstractEntity $entity): bool
     {
-        if($entity->getPurchase()->getLastStatus() instanceof Status && $entity->getPurchase()->getLastStatus()->isFinished()){
+        if($entity->getPurchase()->isFinished()){
             throw new Exception('Venda ja finalizada!');
         }
 

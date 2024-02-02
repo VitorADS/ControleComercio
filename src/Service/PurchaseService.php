@@ -43,11 +43,11 @@ class PurchaseService extends AbstractService
 
     private function isValid(Purchase $entity): void
     {
-        if($entity->getLastStatus()->isFinished() && !$entity->hasPurchaseItems()){
+        if($entity->isFinished() && !$entity->hasPurchaseItems()){
             throw new Exception('Nao possui nenhum item, impossivel finalizar!');
         }
 
-        if($entity->getLastStatus()->isFinished() && $entity->getRemainingValue() > 0){
+        if($entity->isFinished() && $entity->getRemainingValue() > 0){
             throw new Exception('Nao e possivel finalizar, necessario pagar R$ ' . FormatNumber::format($entity->getRemainingValue()));
         }
     }
@@ -60,7 +60,7 @@ class PurchaseService extends AbstractService
     public function remove(AbstractEntity $entity): bool
     {
         try{
-            if($entity->getLastStatus() instanceof Status && $entity->getLastStatus()->isFinished()){
+            if($entity->isFinished()){
                 throw new Exception('Venda finalizada!');
             }
 
@@ -74,21 +74,10 @@ class PurchaseService extends AbstractService
         }
     }
 
-    public function finishPurchase(Purchase $purchase): Purchase
+    public function addStatus(Purchase $purchase, Status $status): Purchase
     {
-        /** @var Status $status */
-        $status = (new StatusService($this->getEntityManager()))->findOneBy(['finished' => true]);
-
         if($purchase->hasStatus($status)){
-            throw new Exception('Venda ja finalizada!');
-        } 
-
-        if($purchase->getTotal() < $purchase->getRemainingValue()){
-            throw new Exception('Venda com pagamento pendente!');
-        }
-
-        if(!$purchase->hasPurchaseItems()){
-            throw new Exception('Nenhum item na venda!');
+            throw new Exception('Status ja adicionado');
         }
 
         $purchase->addStatus($status);

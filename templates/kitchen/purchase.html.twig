@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Itens pedido #{{purchase.id}} - {{purchase.buyerName}} {% endblock %}
+{% block body %}
+{% include "alerts/message.html.twig" %}
+
+<div class="d-flex">
+    <a href="{{path('app_kitchen_home')}}" class="btn btn-primary btn-sm mb-4">Voltar</a>
+    <form action="{{ path('app_kitchen_purchase', {purchase: purchase.id}) }}" method="POST">
+        <button class="btn btn-success btn-sm mb-4 ms-2">Finalizar</button>
+    </form>
+</div>
+
+<div class="list-group">
+    {% for itemP in purchase.purchaseItems %}
+        <div class="list-group-item list-group-item-action active">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1"> {{itemP.product.name}} </h5>
+            </div>
+            <p class="mb-1">{{itemP.product.description}}</p>
+            <small class="fst-italic">{{itemP.notes}}</small>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

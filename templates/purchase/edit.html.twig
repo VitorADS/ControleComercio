@@ -3,13 +3,7 @@
 {% block content %}
     <h4 class="mb-4">Pedido de: {{purchase.buyerName}}</h4>
 
-        {% for label, messages in app.flashes %}
-            {% for message in messages %}
-                <div class="alert alert-{{ label }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endfor %}
+    {% include "alerts/message.html.twig" %}
 
     <ul class="nav nav-underline">
         <li class="nav-item">

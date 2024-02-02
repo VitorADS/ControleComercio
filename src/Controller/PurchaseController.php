@@ -7,11 +7,13 @@ use App\DTO\PurchaseItemDTO;
 use App\Entity\Payment;
 use App\Entity\Purchase;
 use App\Entity\PurchaseItem;
+use App\Entity\Status;
 use App\Form\PurchaseFormType;
 use App\Form\PurchaseItemType;
 use App\Service\PaymentService;
 use App\Service\PurchaseItemService;
 use App\Service\PurchaseService;
+use App\Service\StatusService;
 use App\Traits\Form;
 use App\Traits\Pagination;
 use App\Utils\FormatNumber;
@@ -137,12 +139,14 @@ class PurchaseController extends AbstractController
     public function purchaseFinish(Request $request, Purchase $purchase): Response
     {
         try{
-            $this->purchaseService->finishPurchase($purchase);
+            /** @var Status $status */
+            $status = (new StatusService($this->purchaseService->getEntityManager()))->findOneBy(['finished' => true]);
+            $this->purchaseService->addStatus($purchase, $status);
             $this->addFlash('success', 'Venda finalizada!');
 
             return $this->redirectToRoute('app_purchase_index');
         }catch(Exception $e){
-            $this->addFlash('danger', $e->getMessage());
+            $this->addFlash('danger', 'Venda ja finalizada');
             return $this->redirectToRoute('app_purchase_edit', ['purchase' => $purchase->getId()]);
         }
     }
